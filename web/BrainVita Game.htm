@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"> 
+<html> 
+<head> 
+    <title> BrainVita Game</title> 
+    <script src = 'scripts/gameFunctions.js'></script> 
+    <link rel = 'Stylesheet' type = 'text/css' href = 'css/theme.css'>        
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> 
+</head> 
+<body onload="startGame()"> 
+    <div id = wrapper> 
+        <div id = header>   <h1> Brainvita Game </h1>  </div> 
+        <div id = left> 
+            <br><br> 
+            <div id= statistics> 
+                <input type = button name = startGame value="Start Game" onclick="return startGame()"/> 
+                &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp
+                <input type = button name = giveUp value="Give Up" onclick="return endGame()"/> 
+                <br> 
+                <span id = 'message' style = "color: orange"></span><br> 
+                <br> 
+                No of Moves     = <span id = 'noOfMoves'></span><br> 
+                Remaining Coins = <span id = 'noOfCoins'></span><br> 
+            </div> 
+            <br><br> 
+            <div id = instructions><h3 style = "font-size:18px ; font-weight : normal"> Game Instructions </h3> 
+                    <p>
+                        To play the game jump a marble over another marble into an empty slot.
+                        <ul>
+                            <li> You cannot jump over two marbles. </li>
+                            <li> You cannot jump diagonally.</li>
+                        </ul>
+                        Do this until only one is remaining. When one remains, you have won.
+                        When you have no more left say give Up.
+            </div> 
+        </div> 
+        <div id = right> 
+        </div> 
+    </div> 
+</body> 
+</html> 
