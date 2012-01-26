@@ -1,0 +1,10 @@
+This is a simple game played by a single player. The game starts with a coin jumping over another coin into an empty space. Game ends when there are no available moves/when there's only one coin left in the board. 
+
+How to play.
+1. To move a coin click on the coin to move.
+2. Click on the target empty space by jumping over a coin.
+3. Coin is only allowed to move horizontally and vertically.
+4. Coin can only jump over one coin. 
+5. Diagonal movements are not allowed.
+
+-Sunny. 
