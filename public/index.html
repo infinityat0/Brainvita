@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Brainvita</title>
+    <meta name="description" content="Brainvita (peg solitaire): jump marbles until only one is left." />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='40' fill='%23d9822b'/></svg>" />
+    <link rel="stylesheet" href="style.css" />
+    <script type="module" src="main.js"></script>
+  </head>
+  <body>
+    <main>
+      <header>
+        <h1>Brainvita</h1>
+        <p class="tagline">Jump marbles until only one is left.</p>
+      </header>
+
+      <section class="stats" aria-label="Game status">
+        <div><span class="label">Moves</span><span id="moves" class="value">0</span></div>
+        <div><span class="label">Marbles</span><span id="marbles" class="value">32</span></div>
+      </section>
+
+      <div id="board" class="board" role="grid" aria-label="Brainvita board"></div>
+
+      <p id="message" class="message" role="status" aria-live="polite"></p>
+
+      <div class="controls">
+        <button id="undo" type="button">Undo</button>
+        <button id="restart" type="button" class="primary">New game</button>
+      </div>
+
+      <details class="rules">
+        <summary>How to play</summary>
+        <ul>
+          <li>Tap a marble, then tap an empty hole two spaces away to jump over the marble between them.</li>
+          <li>The jumped marble is removed. Jumps go up, down, left or right, never diagonally.</li>
+          <li>You win when only one marble remains; finishing in the centre is a perfect game.</li>
+          <li>Arrow keys move the focus; Enter or Space selects.</li>
+        </ul>
+      </details>
+    </main>
+  </body>
+</html>

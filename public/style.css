@@ -1,0 +1,240 @@
+:root {
+  --bg: #f6f1e7;
+  --text: #2b2520;
+  --muted: #7a6e63;
+  --board: #b07a45;
+  --board-edge: #8a5a2e;
+  --hole: #6e4520;
+  --marble: #d9822b;
+  --marble-hi: #ffd29a;
+  --accent: #2f7d6d;
+  --danger: #b03a2e;
+  --btn-bg: #fffaf2;
+  --btn-border: #d8cbb8;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #1d1a17;
+    --text: #eee6db;
+    --muted: #a3978a;
+    --board: #5b3f26;
+    --board-edge: #3e2a18;
+    --hole: #24180d;
+    --btn-bg: #2a2521;
+    --btn-border: #4a4038;
+    --accent: #5cc2ab;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.5;
+}
+
+main {
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 24px 16px 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+header {
+  text-align: center;
+}
+
+h1 {
+  margin: 0;
+  font-size: 2.25rem;
+  letter-spacing: -0.02em;
+}
+
+.tagline {
+  margin: 4px 0 0;
+  color: var(--muted);
+}
+
+.stats {
+  display: flex;
+  gap: 32px;
+}
+
+.stats div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+}
+
+.value {
+  font-size: 1.5rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.board {
+  --gap: clamp(4px, 1.5vw, 8px);
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: var(--gap);
+  width: min(100%, 440px);
+  aspect-ratio: 1;
+  padding: calc(var(--gap) * 2);
+  background: radial-gradient(circle at 40% 35%, var(--board), var(--board-edge));
+  border-radius: 50%;
+  box-shadow:
+    inset 0 2px 6px rgb(255 255 255 / 0.15),
+    0 10px 30px rgb(0 0 0 / 0.25);
+}
+
+.cell {
+  position: relative;
+  border: none;
+  padding: 0;
+  margin: 0;
+  background: none;
+  border-radius: 50%;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.cell.off {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* The hole */
+.cell::before {
+  content: "";
+  position: absolute;
+  inset: 12%;
+  border-radius: 50%;
+  background: var(--hole);
+  box-shadow: inset 0 3px 5px rgb(0 0 0 / 0.5);
+}
+
+/* The marble */
+.cell.peg::after {
+  content: "";
+  position: absolute;
+  inset: 6%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, var(--marble-hi), var(--marble) 45%, #8c4a10);
+  box-shadow: 0 3px 5px rgb(0 0 0 / 0.4);
+  transition: transform 120ms ease;
+}
+
+.cell.peg:hover::after {
+  transform: scale(1.05);
+}
+
+.cell.selected::after {
+  transform: translateY(-3px) scale(1.1);
+  box-shadow:
+    0 0 0 3px var(--accent),
+    0 6px 10px rgb(0 0 0 / 0.45);
+}
+
+.cell.target::before {
+  background: var(--accent);
+  opacity: 0.85;
+  box-shadow: 0 0 0 3px rgb(255 255 255 / 0.25);
+}
+
+.cell:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.cell.shake {
+  animation: shake 250ms;
+}
+
+@keyframes shake {
+  25% { transform: translateX(-3px); }
+  75% { transform: translateX(3px); }
+}
+
+.message {
+  min-height: 1.5em;
+  margin: 0;
+  text-align: center;
+  font-weight: 500;
+}
+
+.message.win {
+  color: var(--accent);
+  font-size: 1.15rem;
+}
+
+.message.lose,
+.message.error {
+  color: var(--danger);
+}
+
+.controls {
+  display: flex;
+  gap: 12px;
+}
+
+button:not(.cell) {
+  font: inherit;
+  font-weight: 600;
+  padding: 10px 20px;
+  border-radius: 999px;
+  border: 1px solid var(--btn-border);
+  background: var(--btn-bg);
+  color: var(--text);
+  cursor: pointer;
+}
+
+button:not(.cell):disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+button.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.rules {
+  width: 100%;
+  color: var(--muted);
+}
+
+.rules summary {
+  cursor: pointer;
+  text-align: center;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.rules ul {
+  padding-left: 20px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cell::after,
+  .cell.shake {
+    transition: none;
+    animation: none;
+  }
+}
