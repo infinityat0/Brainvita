@@ -11,6 +11,7 @@ import {
   gameStatus,
   legalTargets,
   moveError,
+  solvePerfect,
 } from "../public/engine.js";
 
 test("new board has 32 marbles and an empty centre", () => {
@@ -81,4 +82,24 @@ test("the engine admits a full solution ending in the centre", () => {
     return false;
   }
   assert.equal(solve(createBoard()), true);
+});
+
+test("solvePerfect returns a legal 31-move game ending in the centre", () => {
+  let b = createBoard();
+  const moves = solvePerfect(b);
+  assert.equal(moves.length, 31);
+  for (const [from, to] of moves) {
+    assert.equal(moveError(b, from, to), null);
+    b = applyMove(b, from, to);
+  }
+  assert.equal(countPegs(b), 1);
+  assert.equal(b[CENTER][CENTER], PEG);
+  assert.equal(gameStatus(b), "won");
+});
+
+test("solvePerfect reports null when no perfect finish exists", () => {
+  const b = createBoard().map((row) => row.map((v) => (v === OFF ? OFF : EMPTY)));
+  b[0][2] = PEG;
+  b[6][4] = PEG;
+  assert.equal(solvePerfect(b), null);
 });

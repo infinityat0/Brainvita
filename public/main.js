@@ -9,6 +9,7 @@ import {
   gameStatus,
   legalTargets,
   moveError,
+  solvePerfect,
 } from "./engine.js";
 
 const boardEl = document.getElementById("board");
@@ -17,12 +18,16 @@ const marblesEl = document.getElementById("marbles");
 const messageEl = document.getElementById("message");
 const undoBtn = document.getElementById("undo");
 const restartBtn = document.getElementById("restart");
+const watchBtn = document.getElementById("watch");
+
+const DEMO_STEP_MS = 650;
 
 let history = []; // previous boards, for undo
 let board = createBoard();
 let selected = null; // [r, c] or null
 let focus = [CENTER, CENTER];
 let message = { text: "Pick a marble to start.", kind: "" };
+let demo = null; // { moves, step, target, timer } while the computer plays
 
 const cells = [];
 
@@ -44,6 +49,7 @@ function buildBoard() {
 }
 
 function isTarget(r, c) {
+  if (demo) return demo.target !== null && demo.target[0] === r && demo.target[1] === c;
   return selected !== null && legalTargets(board, selected).some(([tr, tc]) => tr === r && tc === c);
 }
 
@@ -68,7 +74,9 @@ function render() {
   }
   movesEl.textContent = history.length;
   marblesEl.textContent = countPegs(board);
-  undoBtn.disabled = history.length === 0;
+  undoBtn.disabled = history.length === 0 || demo !== null;
+  watchBtn.textContent = demo ? "Stop" : "Watch perfect game";
+  boardEl.classList.toggle("demo", demo !== null);
 
   if (status === "won") {
     const perfect = board[CENTER][CENTER] === PEG;
@@ -94,7 +102,7 @@ function shake(r, c) {
 }
 
 function handleCell(r, c) {
-  if (gameStatus(board) !== "playing") return;
+  if (demo || gameStatus(board) !== "playing") return;
   focus = [r, c];
   const v = board[r][c];
 
@@ -129,7 +137,7 @@ function handleCell(r, c) {
 }
 
 function undo() {
-  if (history.length === 0) return;
+  if (demo || history.length === 0) return;
   board = history.pop();
   selected = null;
   message = { text: "Move undone.", kind: "" };
@@ -137,6 +145,7 @@ function undo() {
 }
 
 function restart() {
+  stopDemo();
   history = [];
   board = createBoard();
   selected = null;
@@ -169,11 +178,71 @@ document.addEventListener("keydown", (e) => {
   if ((e.ctrlKey || e.metaKey) && e.key === "z") {
     e.preventDefault();
     undo();
+  } else if (e.key === "Escape" && demo) {
+    stopDemo("Stopped. Carry on from here, or press New game.");
   } else if (e.key === "Escape" && selected) {
     selected = null;
     message = { text: "", kind: "" };
     render();
   }
+});
+
+// --- Computer plays a perfect game -------------------------------------
+
+function stopDemo(text) {
+  if (!demo) return;
+  clearTimeout(demo.timer);
+  demo = null;
+  selected = null;
+  if (text) message = { text, kind: "" };
+  render();
+}
+
+function demoTick() {
+  const { moves, step } = demo;
+  if (step >= moves.length) {
+    demo = null;
+    selected = null;
+    render(); // shows the win message
+    return;
+  }
+  const [from, to] = moves[step];
+  if (demo.target === null) {
+    // Phase 1: show which marble moves and where.
+    selected = from;
+    demo.target = to;
+    message = { text: `Computer: move ${step + 1} of ${moves.length}`, kind: "" };
+  } else {
+    // Phase 2: make the jump.
+    history.push(board);
+    board = applyMove(board, from, to);
+    selected = null;
+    demo.target = null;
+    demo.step++;
+  }
+  render();
+  demo.timer = setTimeout(demoTick, demo.target === null ? DEMO_STEP_MS / 3 : DEMO_STEP_MS);
+}
+
+function startDemo() {
+  history = [];
+  board = createBoard();
+  selected = null;
+  const moves = solvePerfect(board);
+  if (!moves) {
+    message = { text: "Couldn't find a perfect game.", kind: "error" };
+    render();
+    return;
+  }
+  demo = { moves, step: 0, target: null, timer: null };
+  message = { text: "Watch the computer solve it.", kind: "" };
+  render();
+  demo.timer = setTimeout(demoTick, DEMO_STEP_MS);
+}
+
+watchBtn.addEventListener("click", () => {
+  if (demo) stopDemo("Stopped. Carry on from here, or press New game.");
+  else startDemo();
 });
 
 undoBtn.addEventListener("click", undo);

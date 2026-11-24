@@ -2,7 +2,8 @@
 
 Brainvita (English peg solitaire) in the browser. Jump a marble over a
 neighbour into an empty hole to remove it; win by leaving a single marble,
-ideally in the centre.
+ideally in the centre. Press **Watch perfect game** to see the computer
+solve it in 31 moves.
 
 ## Play locally
 
@@ -20,8 +21,8 @@ npm test           # Node 18+, uses the built-in test runner
 
 ## Layout
 
-- `public/engine.js` – pure game rules (board, move validation, win/stuck detection)
-- `public/main.js` – UI: rendering, selection, undo, keyboard controls
+- `public/engine.js` – pure game rules (board, move validation, win/stuck detection) and the perfect-game solver
+- `public/main.js` – UI: rendering, selection, undo, keyboard controls, solution playback
 - `public/index.html`, `public/style.css` – page and styling (light and dark)
 - `test/` – engine tests, including a search proving the start position is solvable
 

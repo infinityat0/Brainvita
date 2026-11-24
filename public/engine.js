@@ -97,3 +97,34 @@ export function gameStatus(board) {
   if (countPegs(board) === 1) return "won";
   return hasAnyMove(board) ? "playing" : "stuck";
 }
+
+/**
+ * Finds a sequence of moves that leaves a single marble in the centre (a
+ * "perfect game"), or null if none exists from this position. Depth-first
+ * search that remembers dead-end positions.
+ */
+export function solvePerfect(board) {
+  const dead = new Set();
+  const key = (b) => b.flat().join("");
+  const path = [];
+
+  function search(b) {
+    if (countPegs(b) === 1) return b[CENTER][CENTER] === PEG;
+    const k = key(b);
+    if (dead.has(k)) return false;
+    for (let r = 0; r < SIZE; r++) {
+      for (let c = 0; c < SIZE; c++) {
+        if (b[r][c] !== PEG) continue;
+        for (const to of legalTargets(b, [r, c])) {
+          path.push([[r, c], to]);
+          if (search(applyMove(b, [r, c], to))) return true;
+          path.pop();
+        }
+      }
+    }
+    dead.add(k);
+    return false;
+  }
+
+  return search(board) ? path.slice() : null;
+}

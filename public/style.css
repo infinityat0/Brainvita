@@ -162,6 +162,10 @@ h1 {
   outline-offset: 2px;
 }
 
+.board.demo .cell {
+  cursor: default;
+}
+
 .cell.shake {
   animation: shake 250ms;
 }
@@ -233,7 +237,11 @@ button.primary {
 
 @media (prefers-reduced-motion: reduce) {
   .cell::after,
-  .cell.shake {
+  .board.demo .cell {
+  cursor: default;
+}
+
+.cell.shake {
     transition: none;
     animation: none;
   }
