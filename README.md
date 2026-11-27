@@ -5,6 +5,13 @@ Jump a marble over a neighbour into an empty hole to remove it; win by
 leaving a single marble, ideally in the centre. Press **Watch perfect game**
 to see the computer solve it in 31 moves.
 
+## Download for Android
+
+**[Download Brainvita.apk](https://github.com/infinityat0/Brainvita/releases/latest/download/Brainvita.apk)** (Android 8.0+).
+Open it on your phone and allow installing from your browser or file manager when asked.
+Every change to `android/` on `master` publishes a new build to
+[Releases](https://github.com/infinityat0/Brainvita/releases) via `.github/workflows/android-release.yml`.
+
 ## Layout
 
 - `web/` – the browser game (static site, no build step)
